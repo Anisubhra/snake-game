@@ -30,7 +30,7 @@ h2 {
 }
 
 .game-board {
-    color: #7FFFD4;
+    color: #E56F4C;
 }
 
 #board {
@@ -39,7 +39,7 @@ h2 {
     margin-top: 10rem;
 }
 
-.info {
+.info,.game-logo {
     color: #7FFFD4;
 }
 
