@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snake</title>
     <link rel="shortcut icon" href="snake.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -21,6 +24,10 @@
             Play
         </button> -->
     </main>
+
+    <div class="info">
+        -> Use arrow keys or w,a,s,d to play
+    </div>
 
     <div class="game-over">
         <h1>Game Over</h1>
@@ -190,7 +197,7 @@
             snakeY += velocityY * blockSize;
         }
 
-        function moveSnake(e) {
+        function moveSnake(e = { key: 'ArrowRight' }) {
             if ((e.key == 'ArrowUp' || e.key == 'w') && velocityY != 1) {
                 velocityX = 0;
                 velocityY = -1;
@@ -254,7 +261,7 @@
             if (gameOver)
                 init();
 
-            moveSnake({ code: 'ArrowRight' });
+            moveSnake();
             // playBtn.style.display = 'none';
         }
     </script>

@@ -13,13 +13,14 @@ html {
 body {
     padding: 0;
     margin: 0;
-    font-family: 'Fira Code';
+    font-family: "Press Start 2P", system-ui;
+    font-weight: 400;
     text-align: center;
 }
 
 h1 {
     text-align: center;
-    font-size: 10rem;
+    font-size: 6em;
     line-height: 1;
     margin-bottom: 0;
 }
@@ -29,12 +30,17 @@ h2 {
 }
 
 .game-board {
-    color: aliceblue;
+    color: #7FFFD4;
 }
 
 #board {
-    margin: 4rem auto;
+    margin: 3rem auto;
     border-radius: 5px;
+    margin-top: 10rem;
+}
+
+.info {
+    color: #7FFFD4;
 }
 
 .btn {
