@@ -4,270 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake_Mania</title>
+    <title>Snake Mania - Classic Snake Game</title>
+    <meta name="description"
+        content="Play the classic Snake Mania game online! Use arrow keys or WASD to eat food and grow your snake. Compete for the highest score!">
+    <meta name="keywords"
+        content="snake game, classic snake, online snake, arcade game, retro game, browser game, html5 game, snake mania">
     <link rel="shortcut icon" href="snake.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="canonical" href="YOUR_WEBSITE_URL/index.html">
 </head>
 
 <body>
-    <h1 class="game-board">Score:
-        <span class="score">0</span>
-    </h1>
+    <header>
+        <h1 class="game-board" aria-live="polite">Score:
+            <span class="score" id="currentScore">0</span>
+        </h1>
+    </header>
 
     <main>
-        <canvas id="board"></canvas>
-        <!-- <button onclick="startGame()" class="btn play">
-            <img src="assets/play.png" />
-            Play
-        </button> -->
+        <canvas id="board" aria-label="Snake game board"></canvas>
     </main>
 
-    <div class="info">
-        -> Use arrow keys or w,a,s,d to play
-    </div>
-    <h2 class="game-logo">
-        Snake_Mania
-    </h2>
+    <aside class="info">
+        <p>Use arrow keys or W, A, S, D to control the snake.</p>
+    </aside>
 
-    <div class="game-over">
-        <h1>Game Over</h1>
-        <h2>You Scored: <span class="score">0</span> 🎉</h2>
-        <button class="btn" onClick="restart()">
-            <img src="assets/reset.png" />
+    <h2 class="game-logo" aria-level="1">Snake Mania</h2>
+
+    <div class="game-over" aria-modal="true" role="dialog" aria-labelledby="gameOverTitle" tabindex="-1">
+        <h1 id="gameOverTitle">Game Over</h1>
+        <h2 aria-live="polite">You Scored: <span class="score" id="finalScore">0</span> 🎉</h2>
+        <button class="btn" onclick="restart()" aria-label="Restart the game">
+            <img src="assets/reset.png" alt="Restart icon" aria-hidden="true" />
             Restart
         </button>
     </div>
 
-    <script>
-        let timer;
-        let gameOver = false;
-        let speed = 120;
-        let score = 0;
-
-        // board
-        const boardColor = 'white';
-        const blockSize = 15;
-        const rows = 30;
-        const cols = 30;
-        const scoreBoard = document.querySelectorAll('.score');
-        // const playBtn = document.querySelector('.play');
-        const gameOverScreen = document.querySelector('.game-over');
-        const board = document.getElementById('board');
-        board.height = blockSize * rows;
-        board.width = blockSize * cols;
-        const context = board.getContext('2d');
-
-        // snake
-        const snakeColor = '#7FFFD4';
-        const snakeBodyColor = '#97FCDE';
-        let snakeX = 0;
-        let snakeY = 0;
-        let velocityX = 0;
-        let velocityY = 0;
-        let snakeBody = [];
-
-        // food
-        const foodColor = '#FF6A6F';
-        let foodX;
-        let foodY;
-
-        window.addEventListener('load', init);
-        window.addEventListener('keyup', moveSnake);
-
-        function init() {
-            gameOver = false;
-            score = 0;
-            updateScoreBoard();
-            placeSnake();
-            placeFood();
-            timer = setInterval(update, speed);
-        }
-
-        function update() {
-            drawFrame();
-            checkScore();
-        }
-
-        // helper functions
-        function playSound(file) {
-            const audio = new Audio(file);
-            audio.play();
-        }
-
-        function eatSound() {
-            playSound('assets/food.mp3');
-        }
-
-        function dieSound() {
-            playSound('assets/gameover.mp3');
-        }
-
-        function moveSound() {
-            playSound('assets/move.mp3');
-        }
-
-        function endSound() {
-            playSound('assets/tada.mp3');
-        }
-
-        function checkGamerOver() {
-            if ((snakeX < 0 || snakeX == blockSize * cols) || (snakeY < 0 || snakeY == blockSize * rows)) {
-                gameOver = true;
-            }
-            for (let i = 0; i < snakeBody.length; i++) {
-                if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1])
-                    gameOver = true;
-            }
-
-            return gameOver;
-        }
-
-        function checkScore() {
-            if (foodX == snakeX && foodY == snakeY) {
-                eatSound();
-                score++;
-                updateScoreBoard();
-                snakeBody.push([foodX, foodY]);
-                placeFood();
-            }
-        }
-
-        function updateScoreBoard() {
-            scoreBoard.forEach(board => board.textContent = score);
-        }
-
-        function drawFrame() {
-            drawBoard();
-            drawFood();
-            drawSnake();
-        }
-
-        // board functions
-        function drawBoard() {
-            drawAsset(boardColor, 0, 0, board.width, board.height);
-        }
-
-        // food functions
-        function drawFood() {
-            const radius = 100;
-            const blur = 20;
-            drawAsset(foodColor, foodX, foodY, blockSize, blockSize, radius, blur);
-        }
-
-        function placeFood() {
-            foodX = Math.floor(Math.random() * rows) * blockSize;
-            foodY = Math.floor(Math.random() * cols) * blockSize;
-        }
-
-        // snake functions
-        function drawSnake() {
-            drawBody();
-            drawHead();
-
-            if (checkGamerOver()) {
-                dieSound();
-                stopGame();
-                return;
-            }
-        }
-
-        function drawHead() {
-            const radius = 2;
-            const blur = 15;
-            moveHead();
-            drawAsset(snakeColor, snakeX, snakeY, blockSize, blockSize, radius, blur);
-        }
-
-        function drawBody() {
-            for (let i = snakeBody.length - 1; i > 0; i--) {
-                snakeBody[i] = snakeBody[i - 1];
-            }
-            if (snakeBody.length) {
-                snakeBody[0] = [snakeX, snakeY];
-            }
-
-            // draw the body to the canvas
-            for (let i = 0; i < snakeBody.length; i++) {
-                drawAsset(snakeBodyColor, snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-            }
-        }
-
-        function moveHead() {
-            snakeX += velocityX * blockSize;
-            snakeY += velocityY * blockSize;
-        }
-
-        function moveSnake(e = { key: 'ArrowRight' }) {
-            if ((e.key == 'ArrowUp' || e.key == 'w') && velocityY != 1) {
-                velocityX = 0;
-                velocityY = -1;
-                moveSound();
-            }
-            if ((e.key == 'ArrowDown' || e.key == 's') && velocityY != -1) {
-                velocityX = 0;
-                velocityY = 1;
-                moveSound();
-            }
-            if ((e.key == 'ArrowLeft' || e.key == 'a') && velocityX != 1) {
-                velocityX = -1;
-                velocityY = 0;
-                moveSound();
-            }
-            if ((e.key == 'ArrowRight' || e.key == 'd') && velocityX != -1) {
-                velocityX = 1;
-                velocityY = 0;
-                moveSound();
-            }
-        }
-
-        function placeSnake() {
-            snakeX = blockSize * 5;
-            snakeY = blockSize * 5;
-            velocityX = 0;
-            velocityY = 0;
-            snakeBody = [];
-        }
-
-        // lib functions
-        function drawAsset(color, x, y, width, height, radius = 0, blur = 0) {
-            context.strokeStyle = color;
-            context.fillStyle = color;
-            context.shadowBlur = blur;
-            context.shadowColor = color;
-            context.beginPath();
-            context.roundRect(x, y, width, height, radius);
-            context.stroke();
-            context.fill();
-        }
-
-        function restart() {
-            gameOverScreen.classList.remove('active');
-            startGame();
-        }
-
-        function showGameOver() {
-            setTimeout(() => {
-                gameOverScreen.classList.add('active');
-                endSound();
-            }, 1000)
-        }
-
-        function stopGame() {
-            clearInterval(timer);
-            showGameOver();
-        }
-
-        function startGame() {
-            if (gameOver)
-                init();
-
-            moveSnake();
-            // playBtn.style.display = 'none';
-        }
-    </script>
+    <script src="sound.js"></script>
+    <script src="food.js"></script>
+    <script src="snake.js"></script>
+    <script src="board.js"></script>
+    <script src="game.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>
