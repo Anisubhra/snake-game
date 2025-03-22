@@ -1,21 +1,37 @@
 // sound.js
+const soundFiles = {
+    food: new Audio('assets/food.mp3'),
+    gameover: new Audio('assets/gameover.mp3'),
+    move: new Audio('assets/move.mp3'),
+    tada: new Audio('assets/tada.mp3'),
+};
+
+function preloadSounds() {
+    for (const sound in soundFiles) {
+        soundFiles[sound].load(); // Trigger loading
+    }
+}
+
+// Call preloadSounds() when the page loads
+window.addEventListener('load', preloadSounds);
+
 function playSound(file) {
-    const audio = new Audio(file);
-    audio.play();
+    soundFiles[file].currentTime = 0; // Reset to start
+    soundFiles[file].play();
 }
 
 function eatSound() {
-    playSound('assets/food.mp3');
+    playSound('food');
 }
 
 function dieSound() {
-    playSound('assets/gameover.mp3');
+    playSound('gameover');
 }
 
 function moveSound() {
-    playSound('assets/move.mp3');
+    playSound('move');
 }
 
 function endSound() {
-    playSound('assets/tada.mp3');
+    playSound('tada');
 }
